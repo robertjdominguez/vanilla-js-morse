@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vanilla Morse</title>
+    <link rel="stylesheet" href="./main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@_RobDominguez" />
+    <meta name="twitter:creator" content="@_RobDominguez" />
+    <meta name="twitter:title" content="Vanilla JS Morse Code" />
+    <meta
+      name="twitter:description"
+      content="A Vanilla JS implementation of Morse Code. A great project for a middle-school CS class!"
+    />
+    <meta
+      name="twitter:image"
+      content="https://images.unsplash.com/photo-1570286424717-86d8a0082d0c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=676&q=80"
+    />
+    <script src="./morse.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Morse Code Translator</h1>
+      <div id="bulb"></div>
+      <span id="letter"></span>
+      <div class="warning">Be patient and let this letter finish!</div>
+    </div>
+  </body>
+
+  <style>
+    :root {
+      --gold: hsl(49, 70%, 49%);
+      --red: hsla(9, 78%, 43%, 0.829);
+    }
+
+    body {
+      background: rgb(15, 10, 1);
+      color: white;
+      font-family: "Special Elite", cursive;
+    }
+
+    h1 {
+      font-size: 4rem;
+      text-align: center;
+    }
+
+    #bulb {
+      height: 50px;
+      width: 50px;
+      border-radius: 50px;
+      border: solid 2px black;
+      transition: ease-in-out 0.2s;
+    }
+
+    #letter {
+      font-size: 4rem;
+      min-height: 10vh;
+      opacity: 0;
+      transition: ease-in-out 0.2s;
+    }
+
+    .container {
+      display: grid;
+      place-items: center center;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 800px;
+      min-height: 100vh;
+    }
+
+    .warning {
+      font-size: 0.8rem;
+      place-self: end;
+      padding: 20px 20px;
+      margin: 5vh;
+      background: var(--red);
+      transition: ease-in-out 0.2s;
+      opacity: 0;
+    }
+  </style>
+
+  <script>
+    //   We'll need this wait function later on
+    function wait(ms = 0) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    //   Get the DOM nodes
+    let bulb = document.querySelector(`#bulb`);
+    let visibleLetter = document.querySelector(`#letter`);
+    let warning = document.querySelector(`.warning`);
+
+    // Deal with impatient people using this piece of state
+    let isActive = false;
+
+    //   Function to house all our logic and be invoked
+    function keyboardListener() {
+      // Create the event listener that will do something on each key press
+      document.addEventListener(`keypress`, convertToMorse);
+
+      function bulbFlash(codeSet) {
+        //   Empty duration value to be used later
+        //   CSS values for bulb on and off
+        const bulbOn = `background: var(--gold); box-shadow: 0 0 50px var(--gold);`;
+        const bulbOff = `background: transparent`;
+        codeSet.map((blip, index) => {
+          let duration = null;
+          blip === 0 ? (duration = 333) : (duration = 1000);
+          async function on() {
+            await wait(1200 * (index + 1));
+            bulb.style.cssText = bulbOn;
+            console.log(`flashing on for ${duration}ms for place ${index}`);
+            await wait(duration);
+            bulb.style.cssText = bulbOff;
+          }
+          on();
+        });
+        setTimeout(() => {
+          visibleLetter.style.cssText = `opacity: 0`;
+          isActive = false;
+        }, 5000);
+      }
+
+      function convertToMorse(e) {
+        if (isActive === false) {
+          isActive = true;
+          const letter = e.key;
+          setTimeout(() => {
+            visibleLetter.style.cssText = `opacity: 1`;
+          }, 1000);
+          visibleLetter.innerText = letter;
+          morse.map((instance) => {
+            instance.letter === letter && bulbFlash(instance.code);
+          });
+        } else {
+          setTimeout(() => {
+            warning.style.cssText = `opacity: 0`;
+          }, 1000);
+          warning.style.cssText = `opacity: 1`;
+        }
+      }
+    }
+
+    keyboardListener();
+  </script>
+</html>

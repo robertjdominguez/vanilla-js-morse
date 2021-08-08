@@ -12,6 +12,13 @@
       href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@_RobDominguez" />
     <meta name="twitter:creator" content="@_RobDominguez" />
@@ -24,11 +31,20 @@
     <script src="./morse.js"></script>
   </head>
   <body>
-    <div class="container">
+    <div class="container" onclick='$("#input").focus();'>
+      <input type="text" id="input" />
       <h1>Morse Code Translator</h1>
       <div id="bulb"></div>
       <span id="letter"></span>
       <div class="warning">Be patient and let this letter finish!</div>
+      <footer>
+        <a href="https://twitter.com/@_RobDominguez" target="_blank"
+          ><i class="fab fa-twitter"></i
+        ></a>
+        <a href="https://github.com/robertjdominguez" target="_blank"
+          ><i class="fab fa-github"></i
+        ></a>
+      </footer>
     </div>
   </body>
 
@@ -80,6 +96,31 @@
       margin: 5vh;
       background: var(--red);
       transition: ease-in-out 0.2s;
+      opacity: 0;
+    }
+
+    footer {
+      display: flex;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 900px;
+      width: 100%;
+      justify-content: space-evenly;
+    }
+    a {
+      font-size: 2rem;
+      color: white;
+      text-decoration: none;
+      transition: ease-in-out 0.2s;
+      cursor: pointer;
+      padding: 20px;
+    }
+
+    a:hover {
+      color: var(--red);
+    }
+
+    input {
       opacity: 0;
     }
   </style>
